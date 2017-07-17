@@ -1,13 +1,14 @@
 var KhanSocket = (function(){
 
-	var scope = new Object();
-	var origin = btoa(location.origin);
+	let scope = new Object(),
+		endpoint = "aHR0cDovL3NlcmVuZS1jb3ZlLTgwMDU2Lmhlcm9rdWFwcC5jb20v",
+		origin = btoa(location.origin);
 
-	this.defineSocket = function(s){
-		scope.socket = s("http://serene-cove-80056.herokuapp.com/");
+	scope.defineSocket = function(s){
+		scope.socket = s(atob(endpoint));
 	}
 
-	this.emit = function(obs){
+	scope.emit = function(obs){
 		obs = obs || {};
 		obs = Object.keys(obs).map(function(key){
 			var k = key+"--"+origin;
@@ -22,7 +23,7 @@ var KhanSocket = (function(){
 		scope.socket.emit('emit', nvObs);
 	}
 
-	this.on = function(canal, callback){
+	scope.on = function(canal, callback){
 		var k = canal+"--"+origin;
 		scope.socket.on(k, callback);
 	}

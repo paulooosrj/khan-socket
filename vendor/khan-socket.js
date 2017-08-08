@@ -1,8 +1,8 @@
 var KhanSocket = (function(){
 
 	let scope = new Object(),
-		endpoint = "aHR0cDovL3NlcmVuZS1jb3ZlLTgwMDU2Lmhlcm9rdWFwcC5jb20v",
-		origin = btoa(location.origin);
+		endpoint = "aHR0cHM6Ly9nZW50bGUtb2NlYW4tNzUyODguaGVyb2t1YXBwLmNvbQ==";
+		//origin = btoa(location.origin);
 
 	scope.defineSocket = function(s){
 		scope.socket = s(atob(endpoint));
@@ -11,20 +11,19 @@ var KhanSocket = (function(){
 	scope.emit = function(obs){
 		obs = obs || {};
 		obs = Object.keys(obs).map(function(key){
-			var k = key+"--"+origin;
+			var k = "socket://"+location.host+"/"+key;
 			var rt = new Object();
-			rt[k] = obs[key];
+			rt["canal"] = k; 
+                        rt["data"] = obs[key];
 			return rt;
 		});
-		var nvObs = {};
-		obs.map(function(v){
-			nvObs = Object.assign(nvObs, v);
-		});
-		scope.socket.emit('emit', nvObs);
+                obs.map((e) => {
+                  scope.socket.emit('publish', e);
+                });
 	}
 
 	scope.on = function(canal, callback){
-		var k = canal+"--"+origin;
+		var k = "channel-socket://"+location.host+"/"+canal;
 		scope.socket.on(k, callback);
 	}
 

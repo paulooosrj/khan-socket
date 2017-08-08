@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Chat Online</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        width: 100%;
+        height: 100vh;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        background: #5FBB97;
+        flex-direction: column;
+    }
+
+    .chat-container {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        width: 50%;
+        height: 70vh;
+        border-radius: 5px;
+        background: #63326E;
+    }
+
+    .emit,
+    .timeline {
+        width: 85%;
+    }
+
+    .timeline {
+        height: 70%;
+        background: #fff;
+        margin-bottom: 20px;
+        border-radius: 3px;
+    }
+
+    .inputEmit {
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        border: 0;
+        border-radius: 3px;
+        width: 95.5%;
+        height: 40px;
+        padding-left: 10px;
+    }
+
+    .messages{
+    	height: 100%; 
+    	width: 100%;
+    	overflow-y: scroll;
+    }
+	
+	.message-user{
+		width: 80%;
+		height: auto;
+		display: flex;
+		align-items: center;
+		border-radius: 3px;
+		background: #f4f4f4;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		padding: 10px;
+	}
+
+    .share{
+        margin-top: 50px;
+        width: 50%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="timeline">
+            <center class="messages"></center>
+        </div>
+        <div class="emit">
+            <input type="text" placeholder="Envie sua Mensagem" class="inputEmit">
+        </div>
+    </div>
+
+    <div class="share">
+        <iframe src="https://ghbtns.com/github-btn.html?user=PaulaoDev&type=follow&count=true&size=large" frameborder="0" scrolling="0" width="220px" height="30px"></iframe>
+        <iframe src="https://ghbtns.com/github-btn.html?user=PaulaoDev&repo=khan-socket&type=watch&count=true&size=large&v=2" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+        <iframe src="https://ghbtns.com/github-btn.html?user=PaulaoDev&repo=khan-socket&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+        <!-- Place this tag where you want the button to render. -->
+        <a class="github-button" href="https://github.com/PaulaoDev/khan-socket/archive/master.zip" data-size="large" aria-label="Download PaulaoDev/khan-socket on GitHub">Download</a>
+    </div>
+    
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://rawgit.com/PaulaoDev/khan-socket/master/libs/socket-io.min.js"></script>
+        <script src="https://rawgit.com/PaulaoDev/khan-socket/master/vendor/khan-socket.min.js"></script>
+    <script type="text/javascript">
+ $(document).ready(function(){    
+    const nome = prompt("Qual é seu nome?"); 
+    var khanSocket = new KhanSocket(io);
+
+    $('.inputEmit').keypress(function(e) {
+        var key = e.which;
+        if (key == 13) {
+            khanSocket.emit({
+                "chat": {
+                    message: $(".inputEmit").val(),
+                    nome: nome
+                }
+            });
+            $(".inputEmit").val('');
+        }
+    });
+
+    khanSocket.on('chat', function(r) {
+        var receive = r;
+        $(".messages").append(` 
+			<div class="message-user">
+				<strong>${receive.nome} : </strong><p style="margin-left:10px">${receive.message}</p>
+			</div>
+        `);
+        $(".messages").animate({ 
+        	scrollTop: $('.messages').prop("scrollHeight")}, 
+        1000);
+    });
+   });
+/**/
+    </script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+
+</html>
